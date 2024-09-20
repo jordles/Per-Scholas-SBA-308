@@ -77,14 +77,13 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
   // here, we would process this data to achieve the desired result.
-  let score = 0;
-  let total = 0;
   const result2 = submissions.reduce((acc, { learner_id, assignment_id, submission }) => {
     let learner = acc.find(item => item.id == learner_id); //look for the learner on the accumulator array
-    console.log(learner);
     if(!learner){ //if not found, create a new learner
       learner = {};
       learner.id = learner_id;
+      learner.totalScore = 0;
+      learner.totalScorePossible = 0; 
       learner.avg = 0;
       acc.push(learner);
     }
@@ -95,19 +94,23 @@ function getLearnerData(course, ag, submissions) {
         const notDue = new Date(assign.due_at) > new Date();
         const late = new Date(submission.submitted_at) > new Date(assign.due_at);
         if(notDue) continue; //if the assignment is not due yet, skip the logic
-        if(late) {
-          latePenalty = assign.points_possible * 0.1;
-        }
+        if(late) {latePenalty = assign.points_possible * 0.1;}
         learner[assignment_id] = getAverage(submission.score, assign.points_possible, latePenalty);
-        score += submission.score - latePenalty;
-        total += assign.points_possible;
+        learner.totalScore += submission.score - latePenalty;
+        learner.totalScorePossible += assign.points_possible;
+        
       }
     }
-    console.log(score, total)
-    learner.avg = getAverage(score, total);
+    
+    learner.avg = getAverage(learner.totalScore, learner.totalScorePossible);
+
     return acc;
   }, [])
   
+  result2.forEach(learner => { //to fulfill the requirement of 'removing items from an array or properties of an object'
+    delete learner.totalScore;
+    delete learner.totalScorePossible;
+  });
 
   return result2;
 
