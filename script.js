@@ -88,13 +88,18 @@ function getLearnerData(course, ag, submissions) {
       learner.avg = 0;
       acc.push(learner);
     }
+
     for(let assign of ag.assignments){
-      
       if(assign.id == assignment_id){
-        if(new Date(assign.due_at) > new Date()) continue; //if the assignment is not due yet, skip the logic
-        
-        learner[assignment_id] = getAverage(submission.score, assign.points_possible);
-        score += submission.score;
+        let latePenalty = 0;
+        const notDue = new Date(assign.due_at) > new Date();
+        const late = new Date(submission.submitted_at) > new Date(assign.due_at);
+        if(notDue) continue; //if the assignment is not due yet, skip the logic
+        if(late) {
+          latePenalty = assign.points_possible * 0.1;
+        }
+        learner[assignment_id] = getAverage(submission.score, assign.points_possible, latePenalty);
+        score += submission.score - latePenalty;
         total += assign.points_possible;
       }
     }
@@ -107,8 +112,8 @@ function getLearnerData(course, ag, submissions) {
   return result2;
 
   //helper function for finding the average
-  function getAverage(score, pointsPossible){
-    return score/pointsPossible;
+  function getAverage(score, pointsPossible, latePenalty = 0){
+    return (score - latePenalty)/pointsPossible;
   }
 }
 
