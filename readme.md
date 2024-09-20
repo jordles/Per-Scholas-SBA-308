@@ -2,8 +2,6 @@
 
 ## Requirements/Tracking
 
-
-
 | Requirement | Weight | Finished |
 | :-- | :--: | :--: |
 | Declare variables properly using let and const where appropriate. | 5% | ✅ |

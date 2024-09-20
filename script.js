@@ -77,32 +77,56 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
   // here, we would process this data to achieve the desired result.
+  let score = 0;
+  let total = 0;
   const result2 = submissions.reduce((acc, { learner_id, assignment_id, submission }) => {
-    if(!acc.some(item => item.id == learner_id)){
-      let obj = {};
-      obj.id = learner_id;
-      acc.push(obj);
+    let learner = acc.find(item => item.id == learner_id); //look for the learner on the accumulator array
+    console.log(learner);
+    if(!learner){ //if not found, create a new learner
+      learner = {};
+      learner.id = learner_id;
+      learner.avg = 0;
+      acc.push(learner);
     }
+    for(let assign of ag.assignments){
+      
+      if(assign.id == assignment_id){
+        if(new Date(assign.due_at) > new Date()) continue; //if the assignment is not due yet, skip the logic
+        
+        learner[assignment_id] = getAverage(submission.score, assign.points_possible);
+        score += submission.score;
+        total += assign.points_possible;
+      }
+    }
+    console.log(score, total)
+    learner.avg = getAverage(score, total);
     return acc;
   }, [])
-  const result = [
-    {
-      id: 125,
-      avg: 0.985, // (47 + 150) / (50 + 150)
-      1: 0.94, // 47 / 50
-      2: 1.0 // 150 / 150
-    },
-    {
-      id: 132,
-      avg: 0.82, // (39 + 125) / (50 + 150)
-      1: 0.78, // 39 / 50
-      2: 0.833 // late: (140 - 15) / 150
-    }
-  ];
+  
 
   return result2;
+
+  //helper function for finding the average
+  function getAverage(score, pointsPossible){
+    return score/pointsPossible;
+  }
 }
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 
 console.log(result);
+
+/* const result = [
+  {
+    id: 125,
+    avg: 0.985, // (47 + 150) / (50 + 150)
+    1: 0.94, // 47 / 50
+    2: 1.0 // 150 / 150
+  },
+  {
+    id: 132,
+    avg: 0.82, // (39 + 125) / (50 + 150)
+    1: 0.78, // 39 / 50
+    2: 0.833 // late: (140 - 15) / 150
+  }
+]; */
