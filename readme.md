@@ -8,7 +8,7 @@
 | Use operators to perform calculations on variables and literals. | 5% | ✅ |
 | Use strings, numbers, and Boolean values cached within variables. | 5% | ✅ |
 | Use at least two if/else statements to control program flow. Optionally, use at least one switch statement. | 10% | |
-| Use try/catch statements to manage potential errors in the code, such as incorrectly formatted or typed data being fed into your program. | 5% | |
+| Use try/catch statements to manage potential errors in the code, such as incorrectly formatted or typed data being fed into your program. | 5% | ✅ |
 | Utilize at least two different types of loops. | 5% | ✅ |
 | Utilize at least one loop control keyword such as break or continue. | 3% | ✅ |
 | Create and/or manipulate arrays and objects. | 10% | ✅ |
