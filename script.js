@@ -78,11 +78,20 @@ const LearnerSubmissions = [
 function getLearnerData(course, ag, submissions) {
   // here, we would process this data to achieve the desired result.
   try{
+    // Validate Course Info
+    validateCourseInfo(course);
+    
+    // Validate Assignment Group
+    validateAssignmentGroup(ag);
+
+    // Validate Learner Submissions
+    validateLearnerSubmissions(submissions);
+
     if(course.id !== ag.course_id) throw new Error('Course IDs not valid');
     const result = submissions.reduce((acc, { learner_id, assignment_id, submission }) => {
       let learner = acc.find(item => item.id == learner_id); //look for the learner on the accumulator array
       if(!learner){ //if not found, create a new learner
-        learner = {};
+        learner = { id: learner_id, avg: 0 };
         learner.id = learner_id;
         learner.totalScore = 0;
         learner.totalScorePossible = 0; 
@@ -108,13 +117,43 @@ function getLearnerData(course, ag, submissions) {
 
       return acc;
     }, [])
-    
-    result.forEach(learner => { //to fulfill the requirement of 'removing items from an array or properties of an object'
+    result.map(learner => { //to fulfill the requirement of 'removing items from an array or properties of an object'
       delete learner.totalScore;
       delete learner.totalScorePossible;
     });
-
     return result;
+
+    //validation helper functions
+    function validateCourseInfo(course) {
+      if (typeof course.id !== 'number') throw new Error('Course id should be a number');
+      if (typeof course.name !== 'string') throw new Error('Course name should be a string');
+    }
+    
+    function validateAssignmentGroup(ag) {
+      if (typeof ag.id !== 'number') throw new Error('Assignment group id should be a number');
+      if (typeof ag.name !== 'string') throw new Error('Assignment group name should be a string');
+      if (typeof ag.course_id !== 'number') throw new Error('Assignment group course_id should be a number');
+      if (!Array.isArray(ag.assignments)) throw new Error('Assignments should be an array');
+    
+      ag.assignments.forEach(assign => {
+        if (typeof assign.id !== 'number') throw new Error('Assignment id should be a number');
+        if (typeof assign.name !== 'string') throw new Error('Assignment name should be a string');
+        if (typeof assign.due_at !== 'string') throw new Error('Assignment due_at should be a string');
+        if (typeof assign.points_possible !== 'number') throw new Error('Assignment points_possible should be a number');
+      });
+    }
+    
+    function validateLearnerSubmissions(submissions) {
+      if (!Array.isArray(submissions)) throw new Error('Submissions should be an array');
+    
+      submissions.forEach(submission => {
+        if (typeof submission.learner_id !== 'number') throw new Error('Learner id should be a number');
+        if (typeof submission.assignment_id !== 'number') throw new Error('Assignment id should be a number');
+        if (typeof submission.submission !== 'object') throw new Error('Submission should be an object');
+        if (typeof submission.submission.submitted_at !== 'string') throw new Error('Submission submitted_at should be a string');
+        if (typeof submission.submission.score !== 'number') throw new Error('Submission score should be a number');
+      });
+    }
 
     //helper function for finding the average
     function getAverage(score, pointsPossible, latePenalty = 0){
