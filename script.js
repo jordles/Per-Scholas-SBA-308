@@ -181,7 +181,6 @@ function getLearnerData(course, ag, submissions) {
         submitted_at: 'string',
         score: 'number'
       }
-      console.log(submissions)
       if (!Array.isArray(submissions)) throw new Error('Submissions should be an array');
       submissions.forEach(submission => {
         for (const [key, value] of Object.entries(submission)){
@@ -214,10 +213,10 @@ function getLearnerData(course, ag, submissions) {
 /*                               END OF FUNCTION                              */
 /* -------------------------------------------------------------------------- */
 
-
+console.group('Answer');
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-
 console.log(result);
+console.groupEnd();
 
 /* const result = [
   {
@@ -264,20 +263,20 @@ function test(obj, key, value){
       throw new Error('Invalid object name'); 
   }
   const keys = key.split('.');
-  console.log(keys);
   let temp = clonedObj;
   while(keys.length > 1){ // while there are more nested keys, traverse the object to get the final key
     temp = temp[keys.shift()];
-    console.log('temp', temp);
   }
   temp[keys[0]] = value; // Set the desired value to the last key; we know temp references the same object so changing temp will also change the clonedObj.
 
   /* clonedObj[key] = value; */
   const test = getLearnerData(clonedCourseInfo, clonedAssignmentGroup, clonedLearnerSubmissions);
-  console.log(test);
 }
 
+console.group('Testing Case Examples');
 test(CourseInfo, 'id', 123) //test if ids are matching between course info and assignment group
 test(CourseInfo, 'id', '451') //test if ids are exactly numbers
 test(AssignmentGroup, 'assignments.0.points_possible', 0); //test if points_possible are 0
 test(LearnerSubmissions, '0.submission.score', '16'); //test if scores are a number
+
+console.groupEnd();
