@@ -1,36 +1,26 @@
 # Per Scholas SBA 308 Javascript Fundamentals
 
-Entries of the learners are only logged in our results if the due date has passed compared to today's date. 
+This assignment aims to achieve the same result array given to use, by grapping data from the following objects:   
+CourseInfo, AssignmentGroup, & LearnerSubmissions
 
-I made an extensive and thorough type checking list, which i refactored further later on. 
-
-function validateCourseInfo(course) {
-  if (typeof course.id !== 'number') throw new Error('Course id should be a number');
-  if (typeof course.name !== 'string') throw new Error('Course name should be a string');
-}
-
-to...
-
-function validateCourseInfo(course) {
-  for(const [key, value] of Object.entries(course)){
-    if (key === 'id' && typeof value !== 'number') throw new Error(`Course id should be a number - ${key}: ${value}`);
-    if (key === 'name' && typeof value !== 'string') throw new Error(`Course name should be a string - ${key}: ${value}`);
+```
+const result = [
+  {
+    id: 125,
+    avg: 0.985, // (47 + 150) / (50 + 150)
+    1: 0.94, // 47 / 50
+    2: 1.0 // 150 / 150
+  },
+  {
+    id: 132,
+    avg: 0.82, // (39 + 125) / (50 + 150)
+    1: 0.78, // 39 / 50
+    2: 0.833 // late: (140 - 15) / 150
   }
-}
+];
+```
 
-to...
-
-function validateCourseInfo(course) {
-  const expectedTypes = {
-    id: 'number',
-    name: 'string'
-  }
-  for(const [key, value] of Object.entries(course)){
-    if(typeof value !== expectedTypes[key]) throw new Error(`Course ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
-  }
-}
-
-
+Entries of the learners are only logged in our results if the due date has passed its date in reference to today. 
 
 ## Requirements/Tracking
 
@@ -50,3 +40,44 @@ function validateCourseInfo(course) {
 | Ensure that the program runs without errors (comment out things that do not work, and explain your blockers - you can still receive partial credit). | 10% | ✅ |
 | Commit frequently to the git repository. | 5% | ✅ |
 | Include a README file that contains a description of your application. | 2% | ✅ |
+
+
+## Process
+
+In my code, i use functions for reusable logic, incorporated various if and else statements for control flow, manipulate and traverse the objects to grab and display data efficiently through loops. I use a variety of data types and understand the differences between them and when to use them. 
+
+I made an extensive and thorough type checking list, which i refactored further later on. 
+
+```
+function validateCourseInfo(course) {
+  if (typeof course.id !== 'number') throw new Error('Course id should be a number');
+  if (typeof course.name !== 'string') throw new Error('Course name should be a string');
+}
+```
+
+to...
+
+```
+function validateCourseInfo(course) {
+  for(const [key, value] of Object.entries(course)){
+    if (key === 'id' && typeof value !== 'number') throw new Error(`Course id should be a number - ${key}: ${value}`);
+    if (key === 'name' && typeof value !== 'string') throw new Error(`Course name should be a string - ${key}: ${value}`);
+  }
+}
+```
+
+to...
+
+```
+function validateCourseInfo(course) {
+  const expectedTypes = {
+    id: 'number',
+    name: 'string'
+  }
+  for(const [key, value] of Object.entries(course)){
+    if(typeof value !== expectedTypes[key]) throw new Error(`Course ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
+  }
+}
+```
+
+I also made a testing function, which must use dot notation for its second argument as if were traversing down the nesting arrays/objects. 
