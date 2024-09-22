@@ -47,6 +47,6 @@ function validateCourseInfo(course) {
 | Demonstrate the retrieval, manipulation, and removal of items in an array or properties in an object. | 5% | ✅ |
 | Use functions to handle repeated tasks. | 10% | ✅ |
 | Program outputs processed data as described above. Partial credit will be earned depending on the level of adherence to the described behavior. | 20% | ✅ |
-| Ensure that the program runs without errors (comment out things that do not work, and explain your blockers - you can still receive partial credit). | 10% | |
+| Ensure that the program runs without errors (comment out things that do not work, and explain your blockers - you can still receive partial credit). | 10% | ✅ |
 | Commit frequently to the git repository. | 5% | ✅ |
 | Include a README file that contains a description of your application. | 2% | ✅ |
