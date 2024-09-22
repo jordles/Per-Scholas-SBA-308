@@ -123,6 +123,10 @@ function getLearnerData(course, ag, submissions) {
     });
     return result;
 
+    /* ---------------------------------------------------------------------- */
+    /*                            HELPER FUNCTIONS                            */
+    /* ---------------------------------------------------------------------- */
+
     //validation helper functions
     function validateCourseInfo(course) {
       const expectedTypes = {
@@ -140,36 +144,56 @@ function getLearnerData(course, ag, submissions) {
         name: 'string',
         course_id: 'number',
         group_weight: 'number',
+        assignments: 'array',
         due_at: 'string',
         points_possible: 'number'
       }
       for(const [key, value] of Object.entries(ag)){
-        if(typeof value !== expectedTypes[key]) throw new Error(`Assignment Group ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
-        if (!Array.isArray(ag.assignments)) throw new Error('Assignment Group Assignments should be an array');
+        if(key === 'assignments'){
+          if(!Array.isArray(value)) throw new Error('Assignment Group Assignments should be an array');
+        }
+        else if(typeof value !== expectedTypes[key]) {
+          throw new Error(`Assignment Group ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`)
+        };
       }
       
-      for(const [key, value] of Object.entries(ag.assignments)){
-        if(typeof value !== expectedTypes[key]) throw new Error(`Assignment ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
-        if(key === 'due_at' && typeof value !== expectedTypes[key]) throw new Error(`Assignment ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
-        else if (!dateValidator(value)) throw new Error(`Assignment ${key} should be a valid date, use the format YYYY-MM-DD`);
-      }
+      ag.assignments.forEach(assign => {
+        for(const [key, value] of Object.entries(assign)){
+          if(typeof value !== expectedTypes[key]) {
+            throw new Error(`Assignment ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
+          }
+          if(key === 'due_at' && !dateValidator(value)){
+            throw new Error(`Assignment ${key} should be a valid date, use the format YYYY-MM-DD - ${key}: ${value}`);
+          }
+        }
+      });
     }
     
     function validateLearnerSubmissions(submissions) {
+      const expectedTypes = {
+        learner_id: 'number',
+        assignment_id: 'number',
+        submission: 'object',
+        submitted_at: 'string',
+        score: 'number'
+      }
       if (!Array.isArray(submissions)) throw new Error('Submissions should be an array');
-    
       submissions.forEach(submission => {
-        if (typeof submission.learner_id !== 'number') throw new Error('Learner id should be a number');
-        if (typeof submission.assignment_id !== 'number') throw new Error('Assignment id should be a number');
-        if (typeof submission.submission !== 'object') throw new Error('Submission should be an object');
-        if (typeof submission.submission.submitted_at !== 'string') throw new Error('Submission submitted_at should be a string');
-        else if (!dateValidator(submission.submission.submitted_at)) throw new Error('Submission submitted_at should be a valid date, use the format YYYY-MM-DD');
-        if (typeof submission.submission.score !== 'number') throw new Error('Submission score should be a number');
-      });
+        for (const [key, value] of Object.entries(submission)){
+          if(key === 'submission'){
+            if(typeof value !== 'object') throw new Error('Submission should be an object');
+            for(const [key, val] of Object.entries(value)){
+              if(typeof val !== expectedTypes[key]) throw new Error(`Submission ${key} should be a ${expectedTypes[key]} - ${key}: ${val}`);
+            }
+          }
+          else if(typeof value !== expectedTypes[key]) throw new Error(`Submission ${key} should be a ${expectedTypes[key]} - ${key}: ${value}`);
+        }
+      })
     }
 
     function dateValidator(date) {
-      return /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date);
+      return /^(\d{4})(-|\/)(0[1-9]|1[0-2])(-|\/)(0[1-9]|[12]\d|3[01])$/.test(date);
+      //check for any 4 digits representing the year, check for any 2 digit representing the month going up to 12, and check for any 2 digit representing the day going up to 31. Delimiters can be - or /
     }
     //helper function for finding the average
     function getAverage(score, pointsPossible, latePenalty = 0){
@@ -177,9 +201,14 @@ function getLearnerData(course, ag, submissions) {
       return parseFloat(((score - latePenalty)/pointsPossible).toFixed(3));
     }
   }catch(err){
-    console.log(err);
+    console.error(err);
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                               END OF FUNCTION                              */
+/* -------------------------------------------------------------------------- */
+
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 
