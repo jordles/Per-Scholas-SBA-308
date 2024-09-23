@@ -1,6 +1,6 @@
 # Per Scholas SBA 308 Javascript Fundamentals
 
-This assignment aims to achieve the same result array given to use, by grapping data from the following objects:   
+This assignment aims to achieve the same result array given to us, by grapping data from the following objects:   
 CourseInfo, AssignmentGroup, & LearnerSubmissions
 
 [Live  Demo](https://jordles.github.io/Per-Scholas-SBA-308/)
