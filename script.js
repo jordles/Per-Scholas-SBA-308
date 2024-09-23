@@ -196,7 +196,7 @@ function getLearnerData(course, ag, submissions) {
     }
 
     function dateValidator(date) {
-      return /^(\d{4})(-|\/)(0[1-9]|1[0-2])(-|\/)(0[1-9]|[12]\d|3[01])$/.test(date);
+      return /^(\d{4})(-|\/)(0[1-9]|1[0-2])\2(0[1-9]|[12]\d|3[01])$/.test(date);
       //check for any 4 digits representing the year, check for any 2 digit representing the month going up to 12, and check for any 2 digit representing the day going up to 31. Delimiters can be - or /
     }
     //helper function for finding the average
@@ -271,12 +271,14 @@ function test(obj, key, value){
 
   /* clonedObj[key] = value; */
   const test = getLearnerData(clonedCourseInfo, clonedAssignmentGroup, clonedLearnerSubmissions);
+  console.log(test);
 }
 
 console.group('Testing Case Examples');
 test(CourseInfo, 'id', 123) //test if ids are matching between course info and assignment group
 test(CourseInfo, 'id', '451') //test if ids are exactly numbers
 test(AssignmentGroup, 'assignments.0.points_possible', 0); //test if points_possible are 0
+test(AssignmentGroup, 'assignments.0.due_at', '20234/01/01'); //test if dates are valid 
 test(LearnerSubmissions, '0.submission.score', '16'); //test if scores are a number
 
 console.groupEnd();
