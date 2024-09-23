@@ -3,6 +3,8 @@
 This assignment aims to achieve the same result array given to use, by grapping data from the following objects:   
 CourseInfo, AssignmentGroup, & LearnerSubmissions
 
+[Live  Demo](https://jordles.github.io/Per-Scholas-SBA-308/)
+
 ```
 const result = [
   {
@@ -80,4 +82,7 @@ function validateCourseInfo(course) {
 }
 ```
 
-I also made a testing function, which must use dot notation for its second argument as if were traversing down the nesting arrays/objects. 
+
+## Testing
+
+I also made a testing function, which must use dot notation for its second argument if we're traversing down the nesting arrays/objects. 
